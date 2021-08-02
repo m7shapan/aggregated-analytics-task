@@ -10,10 +10,10 @@ import (
 )
 
 const (
-	eventsFile  CSVFile = "data/events.csv"
-	reposFile   CSVFile = "data/repos.csv"
-	actorsFile  CSVFile = "data/actors.csv"
-	commitsFile CSVFile = "data/commits.csv"
+	EventsFile  CSVFile = "data/events.csv"
+	ReposFile   CSVFile = "data/repos.csv"
+	ActorsFile  CSVFile = "data/actors.csv"
+	CommitsFile CSVFile = "data/commits.csv"
 )
 
 type CSVFile string
@@ -28,14 +28,16 @@ type fileReader struct {
 	reader   *csv.Reader
 }
 
-func NewLoader(filePath string, loadedFile CSVFile) *fileReader {
-	return &fileReader{
+func NewFileReader(filePath string, loadedFile CSVFile) (*fileReader, error) {
+	f := fileReader{
 		filePath: filePath,
 		csvFile:  loadedFile,
 	}
+
+	return &f, f.open()
 }
 
-func (fr fileReader) Load() error {
+func (fr *fileReader) open() error {
 	f, err := os.Open(fr.filePath)
 	if err != nil {
 		return err
